@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  Cycle OSPuter
 //
-//  Created by Carlos Meneses on 5/24/26.
+//  Created by Carlos F. Meneses on 5/24/26.
 //
 
 import SwiftUI
@@ -13,7 +13,7 @@ struct ContentView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("Hello, cyclist!")
         }
         .padding()
     }
