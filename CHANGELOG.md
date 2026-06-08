@@ -17,13 +17,21 @@ Versioning follows [Semantic Versioning](https://semver.org/) — Major.Minor.Pa
 - `README.md` — project description, roadmap, security & privacy section, built-with
 - Hardcoded heading display (307°) — first UI element rendered on iPhone SE simulator
 - Security & privacy section in README:
-  - Least privilege: "when in use" location only
+  - Least privilege: “when in use” location only
   - Data minimization: on-device processing, nothing stored or transmitted
   - Secure credentials: weather API key in iOS Keychain, never in source
   - Secure comms: HTTPS with ATS enforced, API responses validated
   - Privacy by design: no user accounts, no ride storage, no analytics SDKs
-- `CHANGELOG.md` — this file
-- `NOTES.md` — architecture decisions and open questions
+- `CHANGELOG.md` — this file; Keep a Changelog format
+- `NOTES.md` — architecture decisions and open questions; populated with
+  full inception reasoning from 2026-05-24
+- `CHANGELOG.md` and `NOTES.md` added as Xcode project members
+  (referenced, not compiled into app build)
+
+### Fixed
+- Xcode GitHub account authentication — removed duplicate stale accounts;
+  re-verified with secure credential from macOS credential storage;
+  one clean verified account remains; Xcode push confirmed working
 
 ---
 

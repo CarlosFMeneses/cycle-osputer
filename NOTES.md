@@ -9,6 +9,21 @@ Newest entries at the top.
 
 ### Decisions Made
 
+**Xcode security organization — one credential per purpose**
+Per-purpose security credential setup confirmed this session: separate
+credentials for GitHub git operations, remote access, scheduled
+workflows, and general use. Each credential scoped to one job —
+if one is compromised or revoked, nothing else breaks. This is
+least-privilege applied to authentication infrastructure.
+Xcode auth fixed via PAT retrieved from secure macOS credential
+storage. One clean verified GitHub account remains in Xcode.
+
+**CHANGELOG and NOTES workflow established**
+Both files are now part of the CRUD toolkit. Not every session
+requires updates to both — only when architecture decisions are made
+or notable changes land. CHANGELOG tracks what changed; NOTES tracks
+why. README roadmap tracks what is next.
+
 **Heading source: GPS course over ground, not compass**
 The phone compass reports which way the device is physically pointing —
 useless if the phone is clipped at an angle on the handlebars. GPS `course`
@@ -18,8 +33,8 @@ confirmed property. Compass heading explicitly rejected for this use case.
 
 **Privacy by design from day one**
 No user accounts, no backend, no ride storage, no analytics SDKs. App Store
-privacy label target: no data collected. This was Carlos's instinct — starting
-from the user-facing promise ("what does the App Store label say?") and working
+privacy label target: no data collected. This was Carlos’s instinct — starting
+from the user-facing promise (“what does the App Store label say?”) and working
 backward to the architecture that earns it honestly. Not a marketing decision.
 The architecture makes the claim true.
 
@@ -31,7 +46,7 @@ notes). NOTES captures the why behind decisions. Three documents covering:
 what it does (README), what changed (CHANGELOG), why we decided things (NOTES).
 
 **iCloud Drive project location friction**
-Project lives in com~apple~CloudDocs/Xcode — creates friction with Xcode's git
+Project lives in com~apple~CloudDocs/Xcode — creates friction with Xcode’s git
 integration. Xcode pull hangs indefinitely on iCloud file locks. Terminal git
 pull bypasses this cleanly. Consider moving to ~/Developer/ when Swift resumes
 post-cert season. Related open bug report: Desktop Commander iCloud folder
@@ -46,7 +61,7 @@ access conflict (#388).
 **Why this app exists**
 Carlos is a heavy cyclist. Every commercial bike computer (Garmin, Wahoo,
 CYCPLUS, and all App Store equivalents) shows speed, distance, and maybe a map.
-None show wind relative to the rider's direction of travel. Wind is the single
+None show wind relative to the rider’s direction of travel. Wind is the single
 biggest factor in how a ride actually feels — a 15 mph headwind is a completely
 different experience than a 15 mph tailwind at the same speed — yet no app
 surfaces this information in a usable way. The gap was identified by a real
@@ -56,23 +71,23 @@ personal itch.
 **Why wind orientation, not just wind speed**
 Raw wind data (direction + speed from a weather service) is available in many
 apps. The missing piece is wind *relative to the rider* — is it hitting you from
-the front, the back, or the side? That requires combining the wind's absolute
-direction with the rider's direction of travel. A number alone ("NW at 12 mph")
+the front, the back, or the side? That requires combining the wind’s absolute
+direction with the rider’s direction of travel. A number alone (“NW at 12 mph”)
 is useless on a bike. An oriented indicator — headwind, tailwind, crosswind — is
 actionable at a glance. That combination is the unique feature.
 
 **The core computation**
 Relative wind angle = wind direction − course over ground.
 Simple subtraction. The hard part is not the math — it is getting both inputs
-correctly. Carlos's general aviation Private Pilot License training provided the
+correctly. Carlos’s general aviation Private Pilot License training provided the
 conceptual foundation: heading, wind correction angle, relative wind, and the
 critical distinction between where you are *pointing* vs where you are *going*.
 That aviation mental model maps directly onto this app.
 
 **Why the app is also a cybersecurity portfolio piece**
-Per Symoné B. Tech's validated 2026 cybersecurity roadmap: after certs, the
-differentiator is an AI-powered project portfolio documented on GitHub — "99% of
-candidates don't do this." Cycle OSPuter, built security-first with Keychain
+Per Symoné B. Tech’s validated 2026 cybersecurity roadmap: after certs, the
+differentiator is an AI-powered project portfolio documented on GitHub — “99% of
+candidates don’t do this.” Cycle OSPuter, built security-first with secure
 credential storage, on-device data minimization, and ATS-enforced networking,
 documented from commit one, is exactly that differentiator. The tricycle has a
 career job to do beyond the rides.
@@ -88,14 +103,14 @@ clarification: Xcode is the *build tool*, iOS is the *target*. You build one iOS
 app using Mac tooling and run it on the phone. Not two apps, one pipeline.
 
 **Why SwiftUI, not UIKit or Storyboard**
-SwiftUI is Apple's modern declarative UI framework. The template explicitly chose
+SwiftUI is Apple’s modern declarative UI framework. The template explicitly chose
 it over Storyboard (the legacy approach). Key concept established: declarative UI
 *describes* what the screen looks like rather than issuing step-by-step commands
 to build it. This mirrors React/JSX for anyone with web dev background. SwiftUI
 is the present and future of Apple development; UIKit is legacy maintenance.
 
 **Why iPhone SE 3rd Gen as the simulator target**
-Carlos's actual phone. Whatever fits on an SE screen works everywhere; designing
+Carlos’s actual phone. Whatever fits on an SE screen works everywhere; designing
 for a small screen from the start avoids painful layout rewrites later.
 Constraint treated as a creative discipline — three decades of tight column
 grid page layout in print production makes this a familiar challenge, not a
@@ -103,7 +118,7 @@ limitation. Also: what you see in the SE simulator is what you get on the real
 device, so feedback is accurate from day one.
 
 **Why the canvas view was turned off immediately**
-Xcode's live preview canvas attempts to re-render the UI in real time while you
+Xcode’s live preview canvas attempts to re-render the UI in real time while you
 type. On 8GB RAM it is a memory hog that stalls, errors, and competes with the
 Simulator. The canvas is a convenience, not the real thing. Decision: disable
 canvas permanently (Editor → Canvas off), use Simulator exclusively as the
@@ -116,7 +131,7 @@ rather than relying on a preview that may not reflect actual behavior.
 
 **Why start with heading, not wind**
 Two major subsystems were identified from the start: GPS heading (on-device,
-no network) and wind data (weather API, network, authentication, API keys).
+no network) and wind data (weather API, network, authentication, credentials).
 Decision: build one system at a time, never both simultaneously. Heading first
 because it requires no external dependencies — no API account, no network calls,
 no credentials. Prove one system works before introducing the next. This is the
@@ -127,8 +142,8 @@ system independently before trusting the combination.
 This is the single most important early decision and deserves full reasoning.
 
 The goal of the first milestone was to answer one question: *can I get output
-displaying on an iOS screen at all?* Not "can I get GPS working?" Not "can I
-build the full app?" Just: does the display pipeline work — does a value appear
+displaying on an iOS screen at all?* Not “can I get GPS working?” Not “can I
+build the full app?” Just: does the display pipeline work — does a value appear
 on the phone screen?
 
 By hardcoding 307° (a static number in the source code), the display was proven
@@ -143,8 +158,8 @@ is slow and demoralizing. Debugging one new system against a proven baseline is
 fast and precise.
 
 This is standard engineering discipline: establish a baseline, change one thing,
-observe the result. Aviation analogy: you don't test a new autopilot system on
-the same flight you're trying a new engine configuration. One variable at a time.
+observe the result. Aviation analogy: you don’t test a new autopilot system on
+the same flight you’re trying a new engine configuration. One variable at a time.
 
 307° specifically was not deliberate — it was the heading Carlos happened to type.
 It is, incidentally, a northwest heading; a rider on that course into a north
@@ -173,7 +188,7 @@ Those are future concerns.
 ### Repository Decisions
 
 **Why public repo from day one**
-The instinct — "it only says 307°, won't it look unfinished?" — assumes
+The instinct — “it only says 307°, won’t it look unfinished?” — assumes
 recruiters judge a repo by a single snapshot. They do not. For a developer
 in transition, what matters is evidence of working like a developer: consistent
 commits, clean history, professional tooling (gitignore, README, CHANGELOG).
@@ -192,16 +207,14 @@ the App Store (historical VLC conflict). No license: visible and protected.
 A license can always be added later; a permissive license cannot be un-rung.
 
 **Why SSH over HTTPS for git authentication**
-HTTPS authentication requires a Personal Access Token (PAT) — not the GitHub
-password, which was deprecated for git operations in 2021. PATs expire, get
-forgotten, and require re-creation. SSH key pairs: one-time setup, silent
-authentication forever. Carlos already had a key pair registered with GitHub
-from prior projects. The fix was not generating new keys but switching the
-remote URL from HTTPS to SSH format:
+HTTPS authentication requires a token — not the GitHub password, which was
+deprecated for git operations in 2021. Tokens expire, get forgotten, and require
+re-creation. SSH key pairs: one-time setup, silent authentication forever.
+Existing key pair was already registered with GitHub from prior projects.
+The fix was not generating new keys but switching the remote URL format:
 `https://github.com/...` → `git@github.com:...`
-Command: `git remote set-url origin git@github.com:CarlosFMeneses/cycle-osputer.git`
 The colon after github.com (not a slash) is the SSH URL tell.
-Habit going forward: always click SSH (not HTTPS) on GitHub's Code button.
+Habit going forward: always click SSH (not HTTPS) on GitHub’s Code button.
 
 **Why .gitignore before first code commit**
 Xcode generates large volumes of regenerable build artifacts: DerivedData,
@@ -212,10 +225,10 @@ tracking from the start. Fixing a dirty history later is painful. The right
 order: tooling first, then code.
 
 **Why Terminal for some git operations, Xcode for others**
-Xcode's Source Control commit sheet is genuinely useful — visual diff, checkbox
-staging, commit message all in one place. But Xcode's git integration is not
+Xcode’s Source Control commit sheet is genuinely useful — visual diff, checkbox
+staging, commit message all in one place. But Xcode’s git integration is not
 always reliable: pull operations on iCloud-hosted projects hang on file locks.
-Terminal git bypasses iCloud's file-locking behavior and is always reliable.
+Terminal git bypasses iCloud’s file-locking behavior and is always reliable.
 Real professional workflow: use Xcode for commits (convenient, visual), use
 Terminal for pulls and any operation that Xcode fumbles. One git, two doors.
 Pick the right door for the job.
@@ -229,7 +242,7 @@ Security was considered before a single line of production code was written.
 The reasoning: it is architecturally cheap to build secure from the start and
 expensive to retrofit security into a shipped app. The specific decisions:
 
-- Location permission: "when in use" only. The app does not need background
+- Location permission: “when in use” only. The app does not need background
   location to compute relative wind on a ride. Requesting more than needed
   is a privacy violation even if the user grants it. Least privilege.
 
@@ -259,7 +272,7 @@ Security+ and CySA+, which Carlos is pursuing. The app is a live lab.
   is the cleaner long-term choice if the paid account is coming anyway.
 
 - **Wind dial design:** Does the arrow rotate to show wind direction while the
-  dial stays fixed? Or does the whole dial rotate with the rider's heading
+  dial stays fixed? Or does the whole dial rotate with the rider’s heading
   while the arrow stays pointing up? The first approach shows absolute wind;
   the second shows relative wind more intuitively. UX decision — build both
   prototypes and test on a real ride.
@@ -274,7 +287,7 @@ Security+ and CySA+, which Carlos is pursuing. The app is a live lab.
   heading, speed, wind from (cardinal), distance. Real-world glance test
   needed before finalizing layout.
 
-- **Background location:** "When in use" only satisfies the current use case.
+- **Background location:** “When in use” only satisfies the current use case.
   If ride logging is ever added (track recording, distance, elapsed time),
   background location permission is required. Revisit only with explicit
   user consent flow and a genuine feature need. Do not request it speculatively.
@@ -294,6 +307,6 @@ Active Swift development paused June 2026 during CompTIA cert prep:
 
 Core Location and weather API implementation resume after certs.
 Repo and README remain live and portfolio-active during the pause.
-The cert knowledge maps directly onto the app's implementation:
-Network+ → the app's network stack; Security+ → Keychain and ATS;
+The cert knowledge maps directly onto the app’s implementation:
+Network+ → the app’s network stack; Security+ → Keychain and ATS;
 CySA+ → API input validation and threat modeling.
