@@ -10,9 +10,23 @@
 		C25163632FC30C7A00E0B284 /* Cycle OSPuter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cycle OSPuter.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C2836E8A2FD68BE500B7BF66 /* Exceptions for "Cycle OSPuter" folder in "Cycle OSPuter" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CHANGELOG.md,
+				NOTES.md,
+			);
+			target = C25163622FC30C7A00E0B284 /* Cycle OSPuter */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C25163652FC30C7A00E0B284 /* Cycle OSPuter */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C2836E8A2FD68BE500B7BF66 /* Exceptions for "Cycle OSPuter" folder in "Cycle OSPuter" target */,
+			);
 			path = "Cycle OSPuter";
 			sourceTree = "<group>";
 		};
