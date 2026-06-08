@@ -33,6 +33,7 @@ Live location and wind data are next.
 
 Built security-first as part of a cybersecurity transition:
 
+- **Privacy by design** — no user accounts, no ride storage, no analytics SDKs; App Store privacy labels: no data collected
 - **Least privilege** — requests "when in use" location only, never background
 - **Data minimization** — GPS heading is processed on-device; never stored or transmitted
 - **Secure credentials** — weather API key stored in the iOS Keychain, never in source
