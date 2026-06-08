@@ -29,6 +29,15 @@ Live location and wind data are next.
 - [ ] Relative wind dial (head / tail / crosswind)
 - [ ] On-bike display layout
 
+## Security & privacy
+
+Built security-first as part of a cybersecurity transition:
+
+- **Least privilege** — requests "when in use" location only, never background
+- **Data minimization** — GPS heading is processed on-device; never stored or transmitted
+- **Secure credentials** — weather API key stored in the iOS Keychain, never in source
+- **Secure comms** — all network traffic over HTTPS (ATS enforced); API responses validated before use
+
 ## Built with
 
 - **Swift** + **SwiftUI** — declarative UI
@@ -37,7 +46,7 @@ Live location and wind data are next.
 
 ## About
 
-Built by Carlos F. Meneses while transitioning into Apple software development.
+Built by Carlos F. Meneses while transitioning into Apple software development and cybersecurity.
 
 - GitHub: [@CarlosFMeneses](https://github.com/CarlosFMeneses)
 - LinkedIn: [carlosfmeneses](https://www.linkedin.com/in/carlosfmeneses)
